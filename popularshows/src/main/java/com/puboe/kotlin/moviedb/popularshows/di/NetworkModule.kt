@@ -64,7 +64,7 @@ object NetworkModule {
     @JvmStatic
     internal fun providesRetrofit(httpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BuildConfig.MOVIEDB_BASE_URL)
+            .baseUrl(BuildConfig.MOVIEDB_API_BASE_URL)
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(CoroutineCallAdapterFactory())

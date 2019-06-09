@@ -1,6 +1,6 @@
 package com.puboe.kotlin.moviedb.popularshows.entities
 
-class TvShow(
+data class TvShow(
     val name: String,
     val rating: Float,
     val overview: String,
