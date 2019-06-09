@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.android.material.snackbar.Snackbar
 import com.puboe.kotlin.moviedb.popularshows.R
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import dagger.android.AndroidInjection
@@ -31,7 +32,9 @@ class PopularTvShowsActivity : AppCompatActivity() {
 
         initView()
 
-        viewModel.getPopularTvShows()
+        if (savedInstanceState == null) {
+            viewModel.getPopularTvShows()
+        }
     }
 
     private fun initView() {
@@ -40,6 +43,9 @@ class PopularTvShowsActivity : AppCompatActivity() {
         show_list.addItemDecoration(decoration)
 
         initAdapter()
+
+        viewModel.loading.observe(this, Observer { showLoading(it) })
+        viewModel.error.observe(this, Observer { showError(it) })
     }
 
     private fun initAdapter() {
@@ -49,4 +55,18 @@ class PopularTvShowsActivity : AppCompatActivity() {
             adapter.submitList(it)
         })
     }
+
+    private fun showLoading(show: Boolean) {
+        loading.visibility = if (show) View.VISIBLE else View.GONE
+    }
+
+    private fun showError(message: String?) {
+        message?.let {
+            Snackbar.make(shows_container, it, Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.retry)) {
+                    viewModel.requestNextPage()
+                }.show()
+        }
+    }
+
 }

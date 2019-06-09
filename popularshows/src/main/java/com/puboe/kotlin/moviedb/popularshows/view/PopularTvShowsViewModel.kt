@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.puboe.kotlin.moviedb.popularshows.BuildConfig
 import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShowsRepository
@@ -18,12 +17,21 @@ class PopularTvShowsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var popularTvShows: PopularTvShows? = null
-    private val _shows: MutableLiveData<List<TvShow>> = MutableLiveData()
+    private val _shows = MutableLiveData<List<TvShow>>()
+    private val _loading = MutableLiveData<Boolean>()
+    private val _error = MutableLiveData<String?>()
 
     val shows: LiveData<List<TvShow>>
         get() = _shows
 
+    val loading: LiveData<Boolean>
+        get() = _loading
+
+    val error: LiveData<String?>
+        get() = _error
+
     fun getPopularTvShows() {
+        _loading.value = true
         requestNextPage()
     }
 
@@ -32,16 +40,16 @@ class PopularTvShowsViewModel @Inject constructor(
     }
 
     private fun requestPage(page: Int) =
+        _error.value = null
         viewModelScope.launch {
             popularTvShows = repository.getPopularTvShows(TvShowsParams(page))
             updateShows(popularTvShows?.shows)
         }
 
     private fun updateShows(results: List<TvShow>?) {
+        _loading.value = false
         results?.let {
-            val updatedList = _shows.value as? MutableList<TvShow> ?: ArrayList()
-            updatedList.addAll(it)
-            _shows.value = updatedList
+            _shows.value = (_shows.value ?: emptyList()) + it
         }
     }
 
