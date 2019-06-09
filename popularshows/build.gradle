@@ -15,7 +15,8 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "MOVIEDB_APIKEY", "\"5d967c7c335764f39b1efbe9c5de9760\"")
+        buildConfigField("String", "MOVIEDB_API_KEY", "\"INSERT API KEY HERE\"")
+        buildConfigField("String", "MOVIEDB_BASE_URL", "\"https://api.themoviedb.org/3/\"")
     }
 
     buildTypes {

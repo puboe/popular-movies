@@ -12,7 +12,6 @@ class MovieDBNetworkProvider @Inject constructor(
 ) : DataProvider<TvShowsParams, PopularTvShows> {
 
     override suspend fun requestData(params: TvShowsParams): PopularTvShows {
-        // TODO: Add api key via interceptor.
-        return mapper.map(service.getPopularTvShows(params.page, params.apiKey).await())
+        return mapper.map(service.getPopularTvShows(params.page).await())
     }
 }
