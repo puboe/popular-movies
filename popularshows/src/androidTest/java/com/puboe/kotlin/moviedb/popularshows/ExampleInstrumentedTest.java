@@ -1,4 +1,4 @@
-package com.puboe.kotlin.moviedb.popularmovies;
+package com.puboe.kotlin.moviedb.popularshows;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
