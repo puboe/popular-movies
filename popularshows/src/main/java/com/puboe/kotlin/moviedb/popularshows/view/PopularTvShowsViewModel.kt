@@ -20,7 +20,9 @@ class PopularTvShowsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var currentPage = 0
+    private var totalPages = Integer.MAX_VALUE
     private var requestInProgress = false
+
     private val _shows = MutableLiveData<List<TvShow>>()
     private val _loading = MutableLiveData<Boolean>()
     private val _error = MutableLiveData<DataResult.Error?>()
@@ -35,11 +37,13 @@ class PopularTvShowsViewModel @Inject constructor(
         get() = _error
 
     fun getPopularTvShows() {
-        requestNextPage()
+        requestPage(1)
     }
 
     fun requestNextPage() {
-        requestPage(currentPage + 1)
+        if (currentPage + 1 <= totalPages) {
+            requestPage(currentPage + 1)
+        }
     }
 
     fun listScrolled(visibleItemCount: Int, lastVisibleItemPosition: Int, totalItemCount: Int) {
@@ -67,6 +71,7 @@ class PopularTvShowsViewModel @Inject constructor(
     private fun updateShows(result: PopularTvShows) =
         viewModelScope.launch {
             currentPage = result.page
+            totalPages = result.totalPages
             _shows.value = withContext(Dispatchers.IO) {
                 (_shows.value ?: emptyList()) + result.shows
             }
