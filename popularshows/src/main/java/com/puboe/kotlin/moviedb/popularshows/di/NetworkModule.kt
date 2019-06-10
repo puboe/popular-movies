@@ -1,6 +1,7 @@
 package com.puboe.kotlin.moviedb.popularshows.di
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.puboe.kotlin.moviedb.core.entities.DataResult
 import com.puboe.kotlin.moviedb.core.provider.DataMapper
 import com.puboe.kotlin.moviedb.core.provider.DataProvider
 import com.puboe.kotlin.moviedb.popularshows.BuildConfig
@@ -85,7 +86,7 @@ object NetworkModule {
     internal fun providesDataProvider(
         mapper: @JvmSuppressWildcards DataMapper<NetworkTvShows, PopularTvShows>,
         service: TvShowsService
-    ): DataProvider<TvShowsParams, PopularTvShows> {
+    ): DataProvider<TvShowsParams, DataResult<PopularTvShows>> {
         return MovieDBNetworkProvider(mapper, service)
     }
 }

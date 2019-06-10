@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.puboe.kotlin.moviedb.core.entities.DataResult
 import com.puboe.kotlin.moviedb.popularshows.R
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import dagger.android.AndroidInjection
@@ -64,13 +65,28 @@ class PopularTvShowsActivity : AppCompatActivity() {
         loading.visibility = if (show) View.VISIBLE else View.GONE
     }
 
-    private fun showError(message: String?) {
-        message?.let {
-            Snackbar.make(shows_container, it, Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(R.string.retry)) {
-                    viewModel.requestNextPage()
-                }.show()
+    private fun showError(error: DataResult.Error?) {
+        error?.let {
+            val snackbar = if (error !is DataResult.Error.ClientError) {
+                Snackbar.make(shows_container, getErrorMessage(it), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(R.string.retry)) {
+                        viewModel.requestNextPage()
+                    }
+            } else {
+                Snackbar.make(shows_container, getErrorMessage(it), Snackbar.LENGTH_LONG)
+            }
+            snackbar.show()
         }
+    }
+
+    private fun getErrorMessage(error: DataResult.Error): String {
+        return getString(
+            when (error) {
+                is DataResult.Error.ServerError -> R.string.server_error
+                is DataResult.Error.NetworkError -> R.string.network_error
+                is DataResult.Error.ClientError -> R.string.client_error
+            }
+        )
     }
 
     private fun setupScrollListener() {

@@ -2,4 +2,7 @@
     <string name="app_name">PopularMovies</string>
 
     <string name="retry">Retry</string>
+    <string name="server_error">Something went wrong, try again later.</string>
+    <string name="network_error">Oops, your network connection is down.</string>
+    <string name="client_error">Oops, this shouldn\'t have happened!</string>
 </resources>
