@@ -7,10 +7,10 @@ import com.puboe.kotlin.moviedb.popularshows.entities.TvShowsRepository
 import javax.inject.Inject
 
 class MovieDBRepositoryImpl @Inject constructor(
-    private val networkProvider: DataProvider<TvShowsParams, DataResult<PopularTvShows>>
+    private val networkProvider: DataProvider<Int, DataResult<PopularTvShows>>
 ) : TvShowsRepository {
 
-    override suspend fun getPopularTvShows(params: TvShowsParams): DataResult<PopularTvShows> {
+    override suspend fun getPopularTvShows(params: Int): DataResult<PopularTvShows> {
         return networkProvider.requestData(params)
     }
 }

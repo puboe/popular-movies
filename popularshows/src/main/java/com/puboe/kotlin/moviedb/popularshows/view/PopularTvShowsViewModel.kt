@@ -9,7 +9,6 @@ import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShowsRepository
 import com.puboe.kotlin.moviedb.popularshows.extension.singleArgViewModelFactory
-import com.puboe.kotlin.moviedb.popularshows.network.TvShowsParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,13 +36,12 @@ class PopularTvShowsViewModel @Inject constructor(
         get() = _error
 
     fun getPopularTvShows() {
-        requestPage(1)
+        currentPage = 0
+        requestPage(1, true)
     }
 
     fun requestNextPage() {
-        if (currentPage + 1 <= totalPages) {
-            requestPage(currentPage + 1)
-        }
+        requestPage(currentPage + 1, false)
     }
 
     fun listScrolled(visibleItemCount: Int, lastVisibleItemPosition: Int, totalItemCount: Int) {
@@ -52,34 +50,37 @@ class PopularTvShowsViewModel @Inject constructor(
         }
     }
 
-    private fun requestPage(page: Int) {
-        if (requestInProgress) return
+    private fun requestPage(page: Int, replaceResults: Boolean) {
+        if (requestInProgress || page > totalPages) return
 
         resetError()
         showLoading()
-
         viewModelScope.launch {
-
-            val result = repository.getPopularTvShows(TvShowsParams(page))
+            val result = repository.getPopularTvShows(page)
             when (result) {
-                is DataResult.Success -> updateShows(result.data)
+                is DataResult.Success -> updateShows(result.data, replaceResults)
                 is DataResult.Error -> showError(result)
             }
         }
     }
 
-    private fun updateShows(result: PopularTvShows) =
+    private fun updateShows(result: PopularTvShows, replaceResults: Boolean) =
         viewModelScope.launch {
             currentPage = result.page
             totalPages = result.totalPages
-            _shows.value = withContext(Dispatchers.IO) {
-                (_shows.value ?: emptyList()) + result.shows
+            if (replaceResults) {
+                _shows.value = result.shows
+            } else {
+                _shows.value = withContext(Dispatchers.IO) {
+                    (_shows.value ?: emptyList()) + result.shows
+                }
             }
             hideLoading()
             requestInProgress = false
         }
 
     private fun showError(error: DataResult.Error) {
+        hideLoading()
         _error.value = error
         requestInProgress = false
     }

@@ -8,7 +8,6 @@ import com.puboe.kotlin.moviedb.popularshows.BuildConfig
 import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
 import com.puboe.kotlin.moviedb.popularshows.network.MovieDBNetworkProvider
 import com.puboe.kotlin.moviedb.popularshows.network.MovieDBTvShowsMapper
-import com.puboe.kotlin.moviedb.popularshows.network.TvShowsParams
 import com.puboe.kotlin.moviedb.popularshows.network.TvShowsService
 import com.puboe.kotlin.moviedb.popularshows.network.response.NetworkTvShows
 import dagger.Module
@@ -86,7 +85,7 @@ object NetworkModule {
     internal fun providesDataProvider(
         mapper: @JvmSuppressWildcards DataMapper<NetworkTvShows, PopularTvShows>,
         service: TvShowsService
-    ): DataProvider<TvShowsParams, DataResult<PopularTvShows>> {
+    ): DataProvider<Int, DataResult<PopularTvShows>> {
         return MovieDBNetworkProvider(mapper, service)
     }
 }

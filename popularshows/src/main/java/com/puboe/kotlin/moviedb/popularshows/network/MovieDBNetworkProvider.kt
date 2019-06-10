@@ -11,12 +11,12 @@ import javax.inject.Inject
 class MovieDBNetworkProvider @Inject constructor(
     private val mapper: DataMapper<NetworkTvShows, PopularTvShows>,
     private val service: TvShowsService
-) : DataProvider<TvShowsParams, DataResult<PopularTvShows>> {
+) : DataProvider<Int, DataResult<PopularTvShows>> {
 
-    override suspend fun requestData(params: TvShowsParams): DataResult<PopularTvShows> {
+    override suspend fun requestData(params: Int): DataResult<PopularTvShows> {
         try {
             // Retrofit provides main-safe suspend functions.
-            val result = service.getPopularTvShows(params.page).await()
+            val result = service.getPopularTvShows(params).await()
             return DataResult.Success(mapper.map(result))
         } catch (e: HttpException) {
             return when (e.code()) {

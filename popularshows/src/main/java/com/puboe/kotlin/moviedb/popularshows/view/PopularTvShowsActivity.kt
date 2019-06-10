@@ -2,6 +2,8 @@ package com.puboe.kotlin.moviedb.popularshows.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -21,6 +23,7 @@ import javax.inject.Inject
 class PopularTvShowsActivity : AppCompatActivity() {
 
     private val adapter = TvShowsAdapter()
+    private var errorSnackbar: Snackbar? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -38,6 +41,23 @@ class PopularTvShowsActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             viewModel.getPopularTvShows()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.popular_tv_shows_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.refresh -> {
+                show_list.scrollToPosition(0)
+                viewModel.getPopularTvShows()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -66,17 +86,20 @@ class PopularTvShowsActivity : AppCompatActivity() {
     }
 
     private fun showError(error: DataResult.Error?) {
-        error?.let {
-            val snackbar = if (error !is DataResult.Error.ClientError) {
-                Snackbar.make(shows_container, getErrorMessage(it), Snackbar.LENGTH_INDEFINITE)
+        if (error == null) {
+            errorSnackbar?.dismiss()
+            return
+        }
+        errorSnackbar = when (error) {
+            !is DataResult.Error.ClientError -> {
+                Snackbar.make(shows_container, getErrorMessage(error), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.retry)) {
                         viewModel.requestNextPage()
                     }
-            } else {
-                Snackbar.make(shows_container, getErrorMessage(it), Snackbar.LENGTH_LONG)
             }
-            snackbar.show()
+            else -> Snackbar.make(shows_container, getErrorMessage(error), Snackbar.LENGTH_LONG)
         }
+        errorSnackbar?.show()
     }
 
     private fun getErrorMessage(error: DataResult.Error): String {
