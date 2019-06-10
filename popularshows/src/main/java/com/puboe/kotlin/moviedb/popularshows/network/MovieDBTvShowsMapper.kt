@@ -11,6 +11,6 @@ class MovieDBTvShowsMapper : DataMapper<NetworkTvShows, PopularTvShows> {
         val shows = source.results.map {
             TvShow(it.name, it.voteAverage, it.overview, it.posterPath)
         }
-        return PopularTvShows(source.page, source.totalResults, source.totalPages, shows)
+        return PopularTvShows(source.page, source.totalPages, shows)
     }
 }

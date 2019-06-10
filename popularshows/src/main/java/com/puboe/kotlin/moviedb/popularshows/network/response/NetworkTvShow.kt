@@ -1,8 +1,10 @@
 package com.puboe.kotlin.moviedb.popularshows.network.response
 
+import com.google.gson.annotations.SerializedName
+
 data class NetworkTvShow(
-    val name: String,
-    val voteAverage: Float,
-    val overview: String,
-    val posterPath: String?
+    @SerializedName("name") val name: String,
+    @SerializedName("vote_average") val voteAverage: Float,
+    @SerializedName("overview") val overview: String,
+    @SerializedName("poster_path") val posterPath: String?
 )

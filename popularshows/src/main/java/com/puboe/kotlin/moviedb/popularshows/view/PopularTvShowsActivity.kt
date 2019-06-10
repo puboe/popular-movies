@@ -46,6 +46,7 @@ class PopularTvShowsActivity : AppCompatActivity() {
         show_list.addItemDecoration(decoration)
 
         initAdapter()
+        setupScrollListener()
 
         viewModel.loading.observe(this, Observer { showLoading(it) })
         viewModel.error.observe(this, Observer { showError(it) })
@@ -85,5 +86,4 @@ class PopularTvShowsActivity : AppCompatActivity() {
             }
         })
     }
-
 }
