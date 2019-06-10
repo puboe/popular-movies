@@ -1,6 +1,5 @@
 package com.puboe.kotlin.moviedb.popularshows.di
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.puboe.kotlin.moviedb.core.entities.DataResult
 import com.puboe.kotlin.moviedb.core.provider.DataMapper
 import com.puboe.kotlin.moviedb.core.provider.DataProvider
@@ -67,7 +66,6 @@ object NetworkModule {
             .baseUrl(BuildConfig.MOVIEDB_API_BASE_URL)
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
     @Provides

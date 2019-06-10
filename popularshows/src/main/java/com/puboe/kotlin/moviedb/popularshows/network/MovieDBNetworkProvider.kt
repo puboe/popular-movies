@@ -16,7 +16,7 @@ class MovieDBNetworkProvider @Inject constructor(
     override suspend fun requestData(params: Int): DataResult<PopularTvShows> {
         try {
             // Retrofit provides main-safe suspend functions.
-            val result = service.getPopularTvShows(params).await()
+            val result = service.getPopularTvShows(params)
             return DataResult.Success(mapper.map(result))
         } catch (e: HttpException) {
             return when (e.code()) {
@@ -24,7 +24,6 @@ class MovieDBNetworkProvider @Inject constructor(
                 else -> DataResult.Error.ServerError
             }
         } catch (e: Throwable) {
-            // All other exceptions (non-http)
             return DataResult.Error.NetworkError
         }
     }
