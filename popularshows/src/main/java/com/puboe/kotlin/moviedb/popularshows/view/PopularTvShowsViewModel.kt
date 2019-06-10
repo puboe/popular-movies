@@ -39,12 +39,19 @@ class PopularTvShowsViewModel @Inject constructor(
         requestPage((popularTvShows?.page ?: 0) + 1)
     }
 
-    private fun requestPage(page: Int) =
+    fun listScrolled(visibleItemCount: Int, lastVisibleItemPosition: Int, totalItemCount: Int) {
+        if (visibleItemCount + lastVisibleItemPosition + VISIBLE_THRESHOLD >= totalItemCount) {
+            requestNextPage()
+        }
+    }
+
+    private fun requestPage(page: Int) {
         _error.value = null
         viewModelScope.launch {
             popularTvShows = repository.getPopularTvShows(TvShowsParams(page))
             updateShows(popularTvShows?.shows)
         }
+    }
 
     private fun updateShows(results: List<TvShow>?) {
         _loading.value = false
@@ -54,6 +61,8 @@ class PopularTvShowsViewModel @Inject constructor(
     }
 
     companion object {
+        const val VISIBLE_THRESHOLD = 5
+
         /**
          * Factory for creating [PopularTvShowsViewModel]
          *

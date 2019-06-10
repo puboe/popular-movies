@@ -2,11 +2,14 @@ package com.puboe.kotlin.moviedb.popularshows.view
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.puboe.kotlin.moviedb.popularshows.R
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
@@ -67,6 +70,20 @@ class PopularTvShowsActivity : AppCompatActivity() {
                     viewModel.requestNextPage()
                 }.show()
         }
+    }
+
+    private fun setupScrollListener() {
+        val layoutManager = show_list.layoutManager as LinearLayoutManager
+        show_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val totalItemCount = layoutManager.itemCount
+                val visibleItemCount = layoutManager.childCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                viewModel.listScrolled(visibleItemCount, lastVisibleItem, totalItemCount)
+            }
+        })
     }
 
 }
