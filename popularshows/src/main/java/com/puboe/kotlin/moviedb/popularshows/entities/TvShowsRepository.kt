@@ -4,5 +4,7 @@ import com.puboe.kotlin.moviedb.core.entities.DataResult
 
 interface TvShowsRepository {
 
-    suspend fun getPopularTvShows(params: Int): DataResult<PopularTvShows>
+    suspend fun getPopularTvShows(): DataResult<List<TvShow>>
+
+    suspend fun getNextPage(): DataResult<List<TvShow>>
 }

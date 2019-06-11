@@ -22,6 +22,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
+    @Singleton
     @JvmStatic
     internal fun provideApiKeyInterceptor(): Interceptor =
         Interceptor { chain ->
@@ -37,6 +38,7 @@ object NetworkModule {
         }
 
     @Provides
+    @Singleton
     @JvmStatic
     internal fun providesLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply {
@@ -69,6 +71,7 @@ object NetworkModule {
             .build()
 
     @Provides
+    @Singleton
     @JvmStatic
     internal fun providesPopularTvShowsService(retrofit: Retrofit): TvShowsService =
         retrofit.create(TvShowsService::class.java)
@@ -79,6 +82,7 @@ object NetworkModule {
     internal fun providesDataMapper(): DataMapper<NetworkTvShows, PopularTvShows> = MovieDBTvShowsMapper()
 
     @Provides
+    @Singleton
     @JvmStatic
     internal fun providesDataProvider(
         mapper: @JvmSuppressWildcards DataMapper<NetworkTvShows, PopularTvShows>,

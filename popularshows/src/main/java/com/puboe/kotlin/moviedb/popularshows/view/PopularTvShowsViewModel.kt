@@ -5,22 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.puboe.kotlin.moviedb.core.entities.DataResult
-import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShowsRepository
 import com.puboe.kotlin.moviedb.popularshows.extension.singleArgViewModelFactory
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PopularTvShowsViewModel @Inject constructor(
     private val repository: TvShowsRepository
 ) : ViewModel() {
-
-    private var currentPage = 0
-    private var totalPages = Integer.MAX_VALUE
-    private var requestInProgress = false
 
     private val _shows = MutableLiveData<List<TvShow>>()
     private val _loading = MutableLiveData<Boolean>()
@@ -35,13 +28,13 @@ class PopularTvShowsViewModel @Inject constructor(
     val error: LiveData<DataResult.Error?>
         get() = _error
 
-    fun getPopularTvShows() {
-        currentPage = 0
-        requestPage(1, true)
+    fun getPopularTvShows() = viewModelScope.launch {
+        showLoading()
+        handleResult(repository.getPopularTvShows())
     }
 
-    fun requestNextPage() {
-        requestPage(currentPage + 1, false)
+    fun requestNextPage() = viewModelScope.launch {
+        handleResult(repository.getNextPage())
     }
 
     fun listScrolled(visibleItemCount: Int, lastVisibleItemPosition: Int, totalItemCount: Int) {
@@ -50,39 +43,22 @@ class PopularTvShowsViewModel @Inject constructor(
         }
     }
 
-    private fun requestPage(page: Int, replaceResults: Boolean) {
-        if (requestInProgress || page > totalPages) return
-
-        resetError()
-        showLoading()
-        viewModelScope.launch {
-            val result = repository.getPopularTvShows(page)
-            when (result) {
-                is DataResult.Success -> updateShows(result.data, replaceResults)
-                is DataResult.Error -> showError(result)
-            }
+    private fun handleResult(result: DataResult<List<TvShow>>) {
+        when (result) {
+            is DataResult.Success -> updateShows(result)
+            is DataResult.Error -> showError(result)
         }
     }
 
-    private fun updateShows(result: PopularTvShows, replaceResults: Boolean) =
-        viewModelScope.launch {
-            currentPage = result.page
-            totalPages = result.totalPages
-            if (replaceResults) {
-                _shows.value = result.shows
-            } else {
-                _shows.value = withContext(Dispatchers.IO) {
-                    (_shows.value ?: emptyList()) + result.shows
-                }
-            }
-            hideLoading()
-            requestInProgress = false
-        }
+    private fun updateShows(result: DataResult.Success<List<TvShow>>) {
+        resetError()
+        hideLoading()
+        _shows.value = result.data
+    }
 
     private fun showError(error: DataResult.Error) {
         hideLoading()
         _error.value = error
-        requestInProgress = false
     }
 
     private fun resetError() {
@@ -90,10 +66,7 @@ class PopularTvShowsViewModel @Inject constructor(
     }
 
     private fun showLoading() {
-        requestInProgress = true
-        if (currentPage == 0) {
-            _loading.value = true
-        }
+        _loading.value = true
     }
 
     private fun hideLoading() {

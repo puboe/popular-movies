@@ -76,8 +76,8 @@ class PopularTvShowsActivity : AppCompatActivity() {
     private fun initAdapter() {
         show_list.adapter = adapter
         viewModel.shows.observe(this, Observer<List<TvShow>> {
-            Log.d("Activity", "list: ${it?.size}")
-            adapter.submitList(it)
+            Log.d("Activity", "list: ${it.size}")
+            adapter.submitList(ArrayList(it))  // submitList needs to receive a different list each time.
         })
     }
 
