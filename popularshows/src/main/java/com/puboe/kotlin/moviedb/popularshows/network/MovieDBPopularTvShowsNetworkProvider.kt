@@ -8,7 +8,7 @@ import com.puboe.kotlin.moviedb.popularshows.network.response.NetworkTvShows
 import retrofit2.HttpException
 import javax.inject.Inject
 
-class MovieDBNetworkProvider @Inject constructor(
+class MovieDBPopularTvShowsNetworkProvider @Inject constructor(
     private val mapper: DataMapper<NetworkTvShows, PopularTvShows>,
     private val service: TvShowsService
 ) : DataProvider<Int, DataResult<PopularTvShows>> {
