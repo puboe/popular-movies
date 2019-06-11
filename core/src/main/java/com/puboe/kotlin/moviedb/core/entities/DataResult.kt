@@ -9,4 +9,6 @@ sealed class DataResult<out T : Any> {
         object ServerError : Error()
         object ClientError : Error()
     }
+
+    object Ignore : DataResult<Nothing>()
 }

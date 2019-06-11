@@ -3,7 +3,6 @@ package com.puboe.kotlin.moviedb.popularshows.view
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.puboe.kotlin.moviedb.core.entities.DataResult
-import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShowsRepository
 import com.puboe.kotlin.moviedb.popularshows.util.LiveDataTestUtil
@@ -48,16 +47,15 @@ class PopularTvShowsViewModelTest {
 
     @Test
     @ExperimentalCoroutinesApi
-    fun test() = runBlockingTest {
+    fun getPopularTvShows_shouldShowResults() = runBlockingTest {
         val show1 = TvShow("name1", 10F, "overview1", "/poster1")
         val show2 = TvShow("name2", 9F, "overview2", "/poster2")
-        val showsResponse = PopularTvShows(1, 2, listOf(show1, show2))
-        `when`(repository.getPopularTvShows(1)).thenReturn(DataResult.Success(showsResponse))
+        `when`(repository.getPopularTvShows()).thenReturn(DataResult.Success(listOf(show1, show2)))
 
         viewModel.getPopularTvShows()
         testContext.triggerActions()
 
-        verify(repository).getPopularTvShows(1)
+        verify(repository).getPopularTvShows()
         assertThat(LiveDataTestUtil.getValue(viewModel.error)).isNull()
         assertThat(LiveDataTestUtil.getValue(viewModel.loading)).isFalse()
         assertThat(LiveDataTestUtil.getValue(viewModel.shows)).containsExactly(show1, show2)
