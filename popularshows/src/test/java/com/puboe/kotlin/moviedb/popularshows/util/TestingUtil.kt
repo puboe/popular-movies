@@ -12,3 +12,4 @@ private val showMapper = fun(tvShow: TvShow?): NetworkTvShow? {
 
 val showCorrespondence: Correspondence<TvShow, NetworkTvShow> =
     Correspondence.transforming(showMapper, "")
+
