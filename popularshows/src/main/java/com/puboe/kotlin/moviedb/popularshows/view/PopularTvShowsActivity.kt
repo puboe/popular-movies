@@ -9,9 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.puboe.kotlin.moviedb.core.entities.DataResult
 import com.puboe.kotlin.moviedb.popularshows.R
@@ -63,8 +62,10 @@ class PopularTvShowsActivity : AppCompatActivity() {
 
     private fun initView() {
         // Add dividers between RecyclerView's row items
-        val decoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        show_list.addItemDecoration(decoration)
+        show_list.addItemDecoration(TvShowsDecoration(resources.getDimensionPixelSize(R.dimen.decoration_spacing)))
+
+        (show_list.layoutManager as StaggeredGridLayoutManager).gapStrategy =
+            StaggeredGridLayoutManager.GAP_HANDLING_NONE
 
         initAdapter()
         setupScrollListener()
@@ -113,15 +114,15 @@ class PopularTvShowsActivity : AppCompatActivity() {
     }
 
     private fun setupScrollListener() {
-        val layoutManager = show_list.layoutManager as LinearLayoutManager
+        val layoutManager = show_list.layoutManager as StaggeredGridLayoutManager
         show_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val totalItemCount = layoutManager.itemCount
                 val visibleItemCount = layoutManager.childCount
-                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+                val lastVisibleItem = layoutManager.findLastVisibleItemPositions(null)
 
-                viewModel.listScrolled(visibleItemCount, lastVisibleItem, totalItemCount)
+                viewModel.listScrolled(visibleItemCount, lastVisibleItem[0], totalItemCount)
             }
         })
     }

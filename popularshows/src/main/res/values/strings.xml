@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">PopularMovies</string>
-
     <string name="refresh">Refresh</string>
     <string name="retry">Retry</string>
     <string name="server_error">Something went wrong, try again later.</string>

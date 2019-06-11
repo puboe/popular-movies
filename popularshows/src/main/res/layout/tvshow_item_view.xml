@@ -1,50 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
+        app:cardCornerRadius="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <ImageView
-            android:id="@+id/show_poster"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/show_poster"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
+        <ImageView
+                android:id="@+id/show_poster"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="300dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
                 android:id="@+id/show_name"
                 tools:text="TextView"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:layout_marginBottom="8dp"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_below="@id/show_poster"
+                android:layout_marginBottom="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
         <TextView
                 android:id="@+id/show_overview"
                 tools:text="Overview"
-                android:maxLines="3"
+                android:maxLines="2"
                 android:ellipsize="end"
-                android:layout_marginBottom="8dp"
+                android:textSize="12sp"
+                android:layout_below="@id/show_name"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="2dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
+        <ImageView android:id="@+id/star"
+                   android:layout_width="13dp"
+                   android:layout_height="13dp"
+                   android:layout_below="@id/show_overview"
+                   android:layout_marginStart="8dp"
+                   android:layout_marginTop="3dp"
+                   android:layout_marginBottom="8dp"
+                   android:src="@drawable/ic_star"/>
         <TextView
                 android:id="@+id/show_rating"
+                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_below="@id/show_overview"
+                android:layout_toEndOf="@id/star"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                tools:text="10.0"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+</androidx.cardview.widget.CardView>
