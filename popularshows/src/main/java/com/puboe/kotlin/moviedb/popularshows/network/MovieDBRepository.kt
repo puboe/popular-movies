@@ -5,8 +5,6 @@ import com.puboe.kotlin.moviedb.core.provider.DataProvider
 import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShowsRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MovieDBRepository @Inject constructor(
@@ -37,10 +35,7 @@ class MovieDBRepository @Inject constructor(
         return handleResult(result, replaceResults)
     }
 
-    private suspend fun handleResult(
-        result: DataResult<PopularTvShows>,
-        replaceResults: Boolean
-    ): DataResult<List<TvShow>> {
+    private fun handleResult(result: DataResult<PopularTvShows>, replaceResults: Boolean): DataResult<List<TvShow>> {
         return when (result) {
             is DataResult.Success -> handleSuccess(result.data, replaceResults)
             is DataResult.Error -> handleError(result)
@@ -48,15 +43,13 @@ class MovieDBRepository @Inject constructor(
         }
     }
 
-    private suspend fun handleSuccess(result: PopularTvShows, replaceResults: Boolean): DataResult<List<TvShow>> {
+    private fun handleSuccess(result: PopularTvShows, replaceResults: Boolean): DataResult<List<TvShow>> {
         currentPage = result.page
         totalPages = result.totalPages
         if (replaceResults) {
             shows = result.shows as MutableList<TvShow>
         } else {
-            withContext(Dispatchers.IO) {
-                shows.addAll(result.shows)
-            }
+            shows.addAll(result.shows)
         }
         isRequestInProgress = false
         return DataResult.Success(shows)
