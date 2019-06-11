@@ -44,7 +44,6 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
     implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version"
 
     implementation "com.github.bumptech.glide:glide:$glide_version"
@@ -60,8 +59,17 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
 
-    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test:runner:$test_version"
     androidTestImplementation "androidx.test:rules:$test_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+
+    // Dependencies for local unit tests
+    testImplementation "junit:junit:$junit_version"
+    testImplementation "org.mockito:mockito-core:$mockito_version"
+    testImplementation "androidx.test:core:$test_version"
+    testImplementation "androidx.arch.core:core-testing:$arch_testing_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
+    testImplementation "org.robolectric:robolectric:$robolectric_version"
 }
