@@ -16,6 +16,8 @@ import kotlin.coroutines.ContinuationInterceptor
  * executor.
  * See https://medium.com/androiddevelopers/easy-coroutines-in-android-viewmodelscope-25bffb605471
  * and https://github.com/Kotlin/kotlinx.coroutines/issues/541
+ *
+ * @see Android testing codelab.
  */
 @ObsoleteCoroutinesApi
 @ExperimentalCoroutinesApi
