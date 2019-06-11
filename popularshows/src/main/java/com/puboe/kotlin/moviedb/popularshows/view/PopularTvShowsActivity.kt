@@ -61,7 +61,6 @@ class PopularTvShowsActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        // Add dividers between RecyclerView's row items
         show_list.addItemDecoration(TvShowsDecoration(resources.getDimensionPixelSize(R.dimen.decoration_spacing)))
 
         (show_list.layoutManager as StaggeredGridLayoutManager).gapStrategy =
