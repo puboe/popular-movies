@@ -7,6 +7,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.filters.MediumTest
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
@@ -22,6 +23,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@MediumTest
 @RunWith(AndroidJUnit4::class)
 class PopularTvShowsActivityTest {
 
