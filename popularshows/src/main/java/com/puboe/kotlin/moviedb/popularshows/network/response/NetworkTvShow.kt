@@ -3,6 +3,7 @@ package com.puboe.kotlin.moviedb.popularshows.network.response
 import com.google.gson.annotations.SerializedName
 
 data class NetworkTvShow(
+    @SerializedName("id") val id: Int,
     @SerializedName("name") val name: String,
     @SerializedName("vote_average") val voteAverage: Float,
     @SerializedName("overview") val overview: String,

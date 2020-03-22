@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.puboe.kotlin.moviedb.core.entities.DataResult
@@ -39,7 +39,7 @@ class PopularTvShowsActivity : AppCompatActivity() {
         initView()
 
         if (savedInstanceState == null) {
-            viewModel.getPopularTvShows()
+            viewModel.getPopularTvShows(this)
         }
     }
 
@@ -53,7 +53,7 @@ class PopularTvShowsActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.refresh -> {
                 show_list.scrollToPosition(0)
-                viewModel.getPopularTvShows()
+                viewModel.getPopularTvShows(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -67,17 +67,17 @@ class PopularTvShowsActivity : AppCompatActivity() {
             StaggeredGridLayoutManager.GAP_HANDLING_NONE
 
         initAdapter()
-        setupScrollListener()
+        // setupScrollListener()
 
         viewModel.loading.observe(this, Observer { showLoading(it) })
-        viewModel.error.observe(this, Observer { showError(it) })
+        viewModel.errors.observe(this, Observer { showError(it) })
     }
 
     private fun initAdapter() {
         show_list.adapter = adapter
-        viewModel.shows.observe(this, Observer<List<TvShow>> {
+        viewModel.shows.observe(this, Observer<PagedList<TvShow>> {
             Log.d("Activity", "list: ${it.size}")
-            adapter.submitList(ArrayList(it))  // submitList needs to receive a different list each time.
+            adapter.submitList(it)  // submitList needs to receive a different list each time.
         })
     }
 
@@ -94,7 +94,7 @@ class PopularTvShowsActivity : AppCompatActivity() {
             !is DataResult.Error.ClientError -> {
                 Snackbar.make(shows_container, getErrorMessage(error), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.retry)) {
-                        viewModel.requestNextPage()
+                        // viewModel.requestNextPage()
                     }
             }
             else -> Snackbar.make(shows_container, getErrorMessage(error), Snackbar.LENGTH_LONG)
@@ -112,17 +112,17 @@ class PopularTvShowsActivity : AppCompatActivity() {
         )
     }
 
-    private fun setupScrollListener() {
-        val layoutManager = show_list.layoutManager as StaggeredGridLayoutManager
-        show_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val totalItemCount = layoutManager.itemCount
-                val visibleItemCount = layoutManager.childCount
-                val lastVisibleItem = layoutManager.findLastVisibleItemPositions(null)
-
-                viewModel.listScrolled(visibleItemCount, lastVisibleItem[0], totalItemCount)
-            }
-        })
-    }
+    // private fun setupScrollListener() {
+    //     val layoutManager = show_list.layoutManager as StaggeredGridLayoutManager
+    //     show_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+    //         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+    //             super.onScrolled(recyclerView, dx, dy)
+    //             val totalItemCount = layoutManager.itemCount
+    //             val visibleItemCount = layoutManager.childCount
+    //             val lastVisibleItem = layoutManager.findLastVisibleItemPositions(null)
+    //
+    //             viewModel.listScrolled(visibleItemCount, lastVisibleItem[0], totalItemCount)
+    //         }
+    //     })
+    // }
 }

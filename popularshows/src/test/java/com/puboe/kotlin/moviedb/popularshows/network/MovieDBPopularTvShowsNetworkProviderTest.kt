@@ -2,7 +2,7 @@ package com.puboe.kotlin.moviedb.popularshows.network
 
 import com.google.common.truth.Truth.assertThat
 import com.puboe.kotlin.moviedb.core.entities.DataResult
-import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
+import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShowsPage
 import com.puboe.kotlin.moviedb.popularshows.network.response.NetworkTvShow
 import com.puboe.kotlin.moviedb.popularshows.network.response.NetworkTvShows
 import com.puboe.kotlin.moviedb.popularshows.util.showCorrespondence
@@ -83,7 +83,7 @@ class MovieDBPopularTvShowsNetworkProviderTest {
         assertThat(result is DataResult.Error.NetworkError).isTrue()
     }
 
-    private fun responseWithErrorCode(code: Int): Response<PopularTvShows> {
-        return Response.error<PopularTvShows>(code, mock(ResponseBody::class.java))
+    private fun responseWithErrorCode(code: Int): Response<PopularTvShowsPage> {
+        return Response.error<PopularTvShowsPage>(code, mock(ResponseBody::class.java))
     }
 }

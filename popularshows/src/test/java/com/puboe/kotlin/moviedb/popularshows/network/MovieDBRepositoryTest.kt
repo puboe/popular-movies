@@ -3,7 +3,7 @@ package com.puboe.kotlin.moviedb.popularshows.network
 import com.google.common.truth.Truth.assertThat
 import com.puboe.kotlin.moviedb.core.entities.DataResult
 import com.puboe.kotlin.moviedb.core.provider.DataProvider
-import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
+import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShowsPage
 import com.puboe.kotlin.moviedb.popularshows.entities.TvShow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -16,7 +16,7 @@ import org.mockito.MockitoAnnotations
 class MovieDBRepositoryTest {
 
     @Mock
-    private lateinit var networkProvider: DataProvider<Int, DataResult<PopularTvShows>>
+    private lateinit var networkProvider: DataProvider<Int, DataResult<PopularTvShowsPage>>
 
     private lateinit var repository: MovieDBRepository
 
@@ -31,7 +31,7 @@ class MovieDBRepositoryTest {
     fun getPopularTvShows_shouldRequestDataFromProvider() = runBlockingTest {
         val show1 = TvShow("name1", 10F, "overview1", "/poster1")
         val show2 = TvShow("name2", 9F, "overview2", "/poster2")
-        val popularTvShows = PopularTvShows(1, 10, listOf(show1, show2))
+        val popularTvShows = PopularTvShowsPage(1, 10, listOf(show1, show2))
         `when`(networkProvider.requestData(1)).thenReturn(DataResult.Success(popularTvShows))
 
         val result = repository.getPopularTvShows()
@@ -61,8 +61,8 @@ class MovieDBRepositoryTest {
         val show2 = TvShow("name2", 9F, "overview2", "/poster2")
         val show3 = TvShow("name3", 8F, "overview3", "/poster3")
         val show4 = TvShow("name4", 7F, "overview4", "/poster4")
-        val popularTvShows = PopularTvShows(1, 10, listOf(show1, show2))
-        val popularTvShows2 = PopularTvShows(2, 10, listOf(show3, show4))
+        val popularTvShows = PopularTvShowsPage(1, 10, listOf(show1, show2))
+        val popularTvShows2 = PopularTvShowsPage(2, 10, listOf(show3, show4))
         `when`(networkProvider.requestData(1)).thenReturn(DataResult.Success(popularTvShows))
         `when`(networkProvider.requestData(2)).thenReturn(DataResult.Success(popularTvShows2))
 
@@ -88,7 +88,7 @@ class MovieDBRepositoryTest {
     fun getTwoPages_withNotEnoughPagesLeft_shouldRequestDataFromProviderOnce() = runBlockingTest {
         val show1 = TvShow("name1", 10F, "overview1", "/poster1")
         val show2 = TvShow("name2", 9F, "overview2", "/poster2")
-        val popularTvShows = PopularTvShows(1, 1, listOf(show1, show2))
+        val popularTvShows = PopularTvShowsPage(1, 1, listOf(show1, show2))
         `when`(networkProvider.requestData(1)).thenReturn(DataResult.Success(popularTvShows))
 
         val firstResult = repository.getNextPage()

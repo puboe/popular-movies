@@ -4,7 +4,7 @@ import com.puboe.kotlin.moviedb.core.entities.DataResult
 import com.puboe.kotlin.moviedb.core.provider.DataMapper
 import com.puboe.kotlin.moviedb.core.provider.DataProvider
 import com.puboe.kotlin.moviedb.popularshows.BuildConfig
-import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShows
+import com.puboe.kotlin.moviedb.popularshows.entities.PopularTvShowsPage
 import com.puboe.kotlin.moviedb.popularshows.network.MovieDBPopularTvShowsNetworkProvider
 import com.puboe.kotlin.moviedb.popularshows.network.MovieDBTvShowsMapper
 import com.puboe.kotlin.moviedb.popularshows.network.TvShowsService
@@ -79,15 +79,15 @@ object NetworkModule {
     @Provides
     @Singleton
     @JvmStatic
-    internal fun providesDataMapper(): DataMapper<NetworkTvShows, PopularTvShows> = MovieDBTvShowsMapper()
+    internal fun providesDataMapper(): DataMapper<NetworkTvShows, PopularTvShowsPage> = MovieDBTvShowsMapper()
 
     @Provides
     @Singleton
     @JvmStatic
     internal fun providesDataProvider(
-        mapper: @JvmSuppressWildcards DataMapper<NetworkTvShows, PopularTvShows>,
+        mapper: @JvmSuppressWildcards DataMapper<NetworkTvShows, PopularTvShowsPage>,
         service: TvShowsService
-    ): DataProvider<Int, DataResult<PopularTvShows>> {
+    ): DataProvider<Int, DataResult<PopularTvShowsPage>> {
         return MovieDBPopularTvShowsNetworkProvider(mapper, service)
     }
 }
